@@ -5,6 +5,7 @@ only one small C file.
 ## Registers
 
 	register	purpose
+	-------------------------------
 	A			general purpose
 	B			general purpose
 	C			general purpose
