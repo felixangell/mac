@@ -35,6 +35,10 @@ static int instructions[] = {
 	PSH, 5,
 	PSH, 2,
 	ADD,
+	PSH, 10,
+	PSH, 12,
+	ADD,
+	ADD,
 	POP,
 	HLT
 };
@@ -53,6 +57,12 @@ static bool running = true;
 void print_stack(int from, int to) {
 	for (int i = from; i < to; i++) {
 		printf("0x%04x ", stack[i]);
+		if ((i + 1) % 4 == 0) printf("\n");
+	}
+	printf("\n");
+
+	for (int i = from; i < to; i++) {
+		printf("0x%04d ", stack[i]);
 		if ((i + 1) % 4 == 0) printf("\n");
 	}
 	printf("\n");
@@ -84,6 +94,7 @@ void eval(int instr) {
 		registers[A] = stack[SP - 1] + stack[SP - 2];
 		SP = SP - 2;
 		stack[SP] = registers[A];
+		SP = SP + 1;
 		printf("added %d\n", registers[A]);
 		registers[A] = 0;
 		break;
