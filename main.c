@@ -78,25 +78,24 @@ void eval(int instr) {
 		break;
 	}
 	case PSH: {
-		int y = stack[SP] = instructions[IP + 1];
-		IP = IP + 1;
 		SP = SP + 1;
-		printf("pushed %d\n", y);
+		IP = IP + 1;
+		stack[SP] = instructions[IP];
 		break;
 	}
 	case POP: {
-		int x = stack[SP];
 		SP = SP - 1;
-		printf("popped %d\n", x);
 		break;
 	}
 	case ADD: {
-		registers[A] = stack[SP - 1] + stack[SP - 2];
-		SP = SP - 2;
-		stack[SP] = registers[A];
+		registers[A] = stack[SP];
+		SP = SP - 1;
+		registers[B] = stack[SP];
+		SP = SP - 1;
+		registers[C] = registers[B] + registers[A];
 		SP = SP + 1;
-		printf("added %d\n", registers[A]);
-		registers[A] = 0;
+		stack[SP] = registers[C];
+		printf("%d + %d = %d\n", registers[B], registers[A], registers[C]);
 		break;
 	}
 	case NOP: {
@@ -111,6 +110,8 @@ void eval(int instr) {
 }
 
 int main() {
+	SP = -1;
+	
 	while (running) {
 		eval(FETCH);
 		IP = IP + 1;
