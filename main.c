@@ -24,16 +24,17 @@ static int registers[REGISTER_SIZE];
 
 /** Instructions */
 typedef enum {
-	HLT, // 0 -- halts the program
-	PSH, // 1 -- pushes the next instruction
-	POP, // 2 -- pops the stack
-	ADD, // 3 -- pops stack twice, adds result pushes to stack
-	MUL, // 4 -- pops stack twice, multiplies the result pushes to stack
-	DIV, // 5 -- pops stack twice, divides result pushes to stack
-	SUB, // 6 -- pops stack twice, substracts result pushes to stack
-	MOV, // 7 -- mov reg, reg
-	SET, // 8 -- mov val, reg
-	NOP  // 9 -- nothing
+	HLT, // 0 -- hlt :: halts program
+	PSH, // 1 -- psh val :: pushes <val> to stack
+	POP, // 2 -- pop :: pops value from stack
+	ADD, // 3 -- add :: adds top two vals on stack
+	MUL, // 4 -- mul :: multiplies top two vals on stack
+	DIV, // 5 -- div :: divides top two vals on stack
+	SUB, // 6 -- sub :: subtracts top two vals on stack
+	MOV, // 7 -- mov reg_a, reg_b :: movs the value in reg_a to reg_b 
+	SET, // 8 -- set reg, val :: sets the reg to value
+	LOG, // 9 -- log a :: prints out a
+	NOP  // 9 -- nop :: nothing
 } Instructions;
 
 /** if the program is running */
@@ -66,7 +67,12 @@ int test_b[] = {
 
 /** testing set and move */
 int instructions[] = {
-	SET, A, 0
+	SET, A, 2,
+	MOV, A, C,
+	MOV, C, D,
+	LOG, A,
+	LOG, E,
+	HLT
 };
 
 /** quick ways to get SP and IP */
@@ -78,14 +84,6 @@ int instructions[] = {
 
 /** prints the stack from A to B */
 void print_stack(int from, int to) {
-	printf("\n");
-	printf("hex dump from %d to %d\n", from, to);
-	for (int i = from; i < to; i++) {
-		printf("0x%04x ", stack[i]);
-		if ((i + 1) % 4 == 0) printf("\n");
-	}
-	printf("\n");
-
 	printf("decimal dump from %d to %d\n", from, to);
 	for (int i = from; i < to; i++) {
 		printf("0x%04d ", stack[i]);
@@ -94,13 +92,31 @@ void print_stack(int from, int to) {
 	printf("\n");
 }
 
+void print_registers() {
+	printf("register dump\n");
+	for (int i = 0; i < REGISTER_SIZE; i++) {
+		printf("%04d ", registers[i]);
+		if ((i + 1) % 4 == 0) printf("\n");
+	}
+}
+
+int find_empty_register() {
+	for (int i = 0; i < REGISTER_SIZE; i++) {
+		if (i != registers[EX] && i != registers[EXA]) {
+			return i;
+		}
+	}
+	return EX; // throw it in EX, whatever
+}
+
 /** evaluate the given instruction */
 void eval(int instr) {
 	switch (instr) {
 	case HLT: {
 		running = false;
 		printf("finished execution\n");
-		print_stack(0, 16);
+		// print_stack(0, 16);
+		// print_registers();
 		break;
 	}
 	case PSH: {
@@ -114,17 +130,18 @@ void eval(int instr) {
 		break;
 	}
 	case MOV: {
-		registers[EX] = instructions[ip + 1]; // address of from
-		registers[EXA] = instructions[ip + 2]; // adress of to
-		for (int i = 0; i < REGISTER_SIZE; i++) {
-			if (i != registers[EX] && i != registers[EXA]) {
-				
-			}
-		}
+		registers[instructions[IP + 2]] = registers[instructions[IP + 1]];
+		IP = IP + 2;
 		break;
 	}
 	case SET: {
-		printf("curr instr: %d\n", instructions[IP]);
+		registers[instructions[IP + 1]] = instructions[IP + 2];
+		IP = IP + 2;
+		break;
+	}
+	case LOG: {
+		printf("%d\n", registers[instructions[IP + 1]]);
+		IP = IP + 1;
 		break;
 	}
 	case ADD: {
