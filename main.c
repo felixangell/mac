@@ -34,7 +34,11 @@ typedef enum {
 	MOV, // 7 -- mov reg_a, reg_b :: movs the value in reg_a to reg_b 
 	SET, // 8 -- set reg, val :: sets the reg to value
 	LOG, // 9 -- log a :: prints out a
-	NOP  // 9 -- nop :: nothing
+	IF, 
+	IFN,
+	GLD, // 10
+	GPT, // 11
+	NOP  // 12 -- nop :: nothing
 } Instructions;
 
 /** if the program is running */
@@ -67,12 +71,15 @@ int test_b[] = {
 
 /** testing set and move */
 int instructions[] = {
-	SET, A, 2,
-	MOV, A, C,
-	MOV, C, D,
-	LOG, A,
-	LOG, E,
-	HLT
+	SET, A, 21,		// 3
+	GLD, A,			// 5
+	PSH, 1,			// 7
+	SUB,			// 8
+	GPT, A,			// 10
+	IFN, A, 0, 2,	// 14
+	LOG, A,			// 16
+	LOG, B,
+	HLT				// 17
 };
 
 /** quick ways to get SP and IP */
@@ -83,13 +90,14 @@ int instructions[] = {
 #define FETCH (instructions[IP])
 
 /** prints the stack from A to B */
-void print_stack(int from, int to) {
-	printf("decimal dump from %d to %d\n", from, to);
-	for (int i = from; i < to; i++) {
+void print_stack() {
+	for (int i = 0; i < SP; i++) {
 		printf("0x%04d ", stack[i]);
 		if ((i + 1) % 4 == 0) printf("\n");
 	}
-	printf("\n");
+	if (SP != 0) {
+		printf("\n");
+	}
 }
 
 void print_registers() {
@@ -129,6 +137,23 @@ void eval(int instr) {
 		SP = SP - 1;
 		break;
 	}
+	case IF: {
+		if (registers[instructions[IP + 1]] == instructions[IP + 2]) {
+			registers[IP + 1] = instructions[IP + 3];	
+		}
+		IP = IP + 3;
+		break;
+	}
+	case IFN: {
+		if (registers[instructions[IP + 1]] != instructions[IP + 2]) {
+			registers[EX] = instructions[IP + 3];
+			registers[IP] = registers[EX];
+		}
+		else {
+			IP = IP + 3;
+		}
+		break;
+	}
 	case MOV: {
 		registers[instructions[IP + 2]] = registers[instructions[IP + 1]];
 		IP = IP + 2;
@@ -138,6 +163,17 @@ void eval(int instr) {
 		registers[instructions[IP + 1]] = instructions[IP + 2];
 		IP = IP + 2;
 		break;
+	}
+	case GLD: {
+		SP = SP + 1;
+		IP = IP + 1;
+		stack[SP] = registers[instructions[IP]];
+		break;
+	}
+	case GPT: {
+		registers[instructions[IP + 1]] = stack[SP];
+		IP = IP + 1;
+		break;	
 	}
 	case LOG: {
 		printf("%d\n", registers[instructions[IP + 1]]);
