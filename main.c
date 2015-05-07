@@ -12,6 +12,10 @@ typedef enum {
 	D,
 	E,
 	F,
+	I,
+	J,
+	EX,				// EXCESS
+	EXA,			// MORE EXCESS
 	IP,				// INSTRUCTION POINTER
 	SP,				// STACK POINTER
 	REGISTER_SIZE
@@ -27,11 +31,16 @@ typedef enum {
 	MUL, // 4 -- pops stack twice, multiplies the result pushes to stack
 	DIV, // 5 -- pops stack twice, divides result pushes to stack
 	SUB, // 6 -- pops stack twice, substracts result pushes to stack
-	NOP  // 7 -- nothing
+	MOV, // 7 -- mov reg, reg
+	SET, // 8 -- mov val, reg
+	NOP  // 9 -- nothing
 } Instructions;
 
-/** Program to run */
-static int instructions[] = {
+/** if the program is running */
+static bool running = true;
+
+/** testing addition */
+int test_a[] = {
 	PSH, 5,
 	PSH, 2,
 	ADD,
@@ -43,8 +52,22 @@ static int instructions[] = {
 	HLT
 };
 
-/** if the program is running */
-static bool running = true;
+/** testing multiplication */
+int test_b[] = {
+	PSH, 5,
+	PSH, 2,
+	MUL,
+	PSH, 10,
+	PSH, 20,
+	ADD,
+	ADD,
+	HLT
+};
+
+/** testing set and move */
+int instructions[] = {
+	SET, A, 0
+};
 
 /** quick ways to get SP and IP */
 #define SP (registers[SP])
@@ -55,12 +78,15 @@ static bool running = true;
 
 /** prints the stack from A to B */
 void print_stack(int from, int to) {
+	printf("\n");
+	printf("hex dump from %d to %d\n", from, to);
 	for (int i = from; i < to; i++) {
 		printf("0x%04x ", stack[i]);
 		if ((i + 1) % 4 == 0) printf("\n");
 	}
 	printf("\n");
 
+	printf("decimal dump from %d to %d\n", from, to);
 	for (int i = from; i < to; i++) {
 		printf("0x%04d ", stack[i]);
 		if ((i + 1) % 4 == 0) printf("\n");
@@ -87,15 +113,74 @@ void eval(int instr) {
 		SP = SP - 1;
 		break;
 	}
+	case MOV: {
+		registers[EX] = instructions[ip + 1]; // address of from
+		registers[EXA] = instructions[ip + 2]; // adress of to
+		for (int i = 0; i < REGISTER_SIZE; i++) {
+			if (i != registers[EX] && i != registers[EXA]) {
+				
+			}
+		}
+		break;
+	}
+	case SET: {
+		printf("curr instr: %d\n", instructions[IP]);
+		break;
+	}
 	case ADD: {
 		registers[A] = stack[SP];
 		SP = SP - 1;
+		
 		registers[B] = stack[SP];
 		SP = SP - 1;
+
 		registers[C] = registers[B] + registers[A];
+
 		SP = SP + 1;
 		stack[SP] = registers[C];
 		printf("%d + %d = %d\n", registers[B], registers[A], registers[C]);
+		break;
+	}
+	case SUB: {
+		registers[A] = stack[SP];
+		SP = SP - 1;
+		
+		registers[B] = stack[SP];
+		SP = SP - 1;
+
+		registers[C] = registers[B] - registers[A];
+
+		SP = SP + 1;
+		stack[SP] = registers[C];
+		printf("%d - %d = %d\n", registers[B], registers[A], registers[C]);
+		break;
+	}
+	case DIV: {
+		registers[A] = stack[SP];
+		SP = SP - 1;
+		
+		registers[B] = stack[SP];
+		SP = SP - 1;
+
+		registers[C] = registers[B] / registers[A];
+
+		SP = SP + 1;
+		stack[SP] = registers[C];
+		printf("%d / %d = %d\n", registers[B], registers[A], registers[C]);
+		break;
+	}
+	case MUL: {
+		registers[A] = stack[SP];
+		SP = SP - 1;
+		
+		registers[B] = stack[SP];
+		SP = SP - 1;
+
+		registers[C] = registers[B] * registers[A];
+
+		SP = SP + 1;
+		stack[SP] = registers[C];
+		printf("%d * %d = %d\n", registers[B], registers[A], registers[C]);
 		break;
 	}
 	case NOP: {
