@@ -1,5 +1,5 @@
 FLAGS = -Wall -Wextra -g -std=c11
-SRC_FILES = $(wildcard *.c)
+SRC_FILES = main.c
 
 all:
 	gcc ${SRC_FILES} ${FLAGS} -o mac

@@ -2,28 +2,16 @@
 MAC is a really simple virtual machine. It's written in C and is [as of writing this]
 only one small C file.
 
-## Registers
+[Blog Post!](http://blog.felixangell.com/virtual-machine-in-c/)
 
-	register	purpose
-	-------------------------------
-	A			general purpose
-	B			general purpose
-	C			general purpose
-	D			general purpose
-	E			general purpose
-	F			general purpose
-	IP			instruction pointer
-	SP			stack pointer
+Check out the [improved version](mac-improved/) to see an implementation of more instructions,
+registers, etc...
 
 ## Instructions
 
-	op   val    function
+	op   val    usage    			function
 	---------------------------------------------------------------------
-	HLT  0		halts the program
-	PSH  1		pushes the next instruction
-	POP  2		pops the stack
-	ADD  3		pops stack twice, adds result pushes to stack
-	MUL  4		pops stack twice, multiplies the result pushes to stack
-	DIV  5		pops stack twice, divides result pushes to stack
-	SUB  6		pops stack twice, substracts result pushes to stack
-	NOP  7		nothing
+	HLT  0      hlt 	 			halts program
+	PSH  1      psh val  			pushes <val> to stack
+	POP  2      pop 	 			pops value from stack
+	ADD  3      add 	 			adds top two vals on stack
