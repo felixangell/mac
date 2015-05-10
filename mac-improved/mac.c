@@ -1,6 +1,6 @@
 /**
 
-	A more advanced version of the VM
+   A more advanced version of the VM
 
 **/
 
@@ -37,14 +37,15 @@ typedef enum {
 	MUL, // 4 -- mul :: multiplies top two vals on stack
 	DIV, // 5 -- div :: divides top two vals on stack
 	SUB, // 6 -- sub :: subtracts top two vals on stack
-	MOV, // 7 -- mov reg_a, reg_b :: movs the value in reg_a to reg_b 
-	SET, // 8 -- set reg, val :: sets the reg to value
-	LOG, // 9 -- log a :: prints out a
-	IF,  // 10 -- if reg val ip :: if the register == val branch to the ip
-	IFN, // 11 -- ifn reg val ip :: if the register != val branch to the ip
-	GLD, // 10 -- gld reg :: loads a register to the stack
-	GPT, // 11 -- gpt reg :: pushes top of stack to the given register
-	NOP  // 12 -- nop :: nothing
+	SLT, // 7 -- slt reg_a, reg_b :: pushes (reg_a < reg_b) to stack
+	MOV, // 8 -- mov reg_a, reg_b :: movs the value in reg_a to reg_b 
+	SET, // 9 -- set reg, val :: sets the reg to value
+	LOG, // 10 -- log a :: prints out a
+	IF,  // 11 -- if reg val ip :: if the register == val branch to the ip
+	IFN, // 12 -- ifn reg val ip :: if the register != val branch to the ip
+	GLD, // 13 -- gld reg :: loads a register to the stack
+	GPT, // 14 -- gpt reg :: pushes top of stack to the given register
+	NOP  // 15 -- nop :: nothing
 } Instructions;
 
 /** if the program is running */
@@ -191,11 +192,11 @@ void eval(int instr) {
 		SP = SP - 1;
 		
 		registers[B] = stack[SP];
-		SP = SP - 1;
+		/* SP = SP - 1; */
 
 		registers[C] = registers[B] + registers[A];
 
-		SP = SP + 1;
+		/* SP = SP + 1; */
 		stack[SP] = registers[C];
 		printf("%d + %d = %d\n", registers[B], registers[A], registers[C]);
 		break;
@@ -205,13 +206,23 @@ void eval(int instr) {
 		SP = SP - 1;
 		
 		registers[B] = stack[SP];
-		SP = SP - 1;
+		/* SP = SP - 1; */
 
 		registers[C] = registers[B] - registers[A];
 
-		SP = SP + 1;
+		/* SP = SP + 1; */
 		stack[SP] = registers[C];
 		printf("%d - %d = %d\n", registers[B], registers[A], registers[C]);
+		break;
+	}
+	case SLT: {
+		SP = SP - 1;
+
+		if (stack[SP+1] < stack[SP])
+			stack[SP] = 1;
+		else
+			stack[SP] = 0;
+
 		break;
 	}
 	case DIV: {
@@ -219,11 +230,11 @@ void eval(int instr) {
 		SP = SP - 1;
 		
 		registers[B] = stack[SP];
-		SP = SP - 1;
+		/* SP = SP - 1;*/
 
 		registers[C] = registers[B] / registers[A];
 
-		SP = SP + 1;
+		/* SP = SP + 1; */
 		stack[SP] = registers[C];
 		printf("%d / %d = %d\n", registers[B], registers[A], registers[C]);
 		break;
@@ -233,11 +244,11 @@ void eval(int instr) {
 		SP = SP - 1;
 		
 		registers[B] = stack[SP];
-		SP = SP - 1;
+		/*SP = SP - 1;*/
 
 		registers[C] = registers[B] * registers[A];
 
-		SP = SP + 1;
+		/*SP = SP + 1;*/
 		stack[SP] = registers[C];
 		printf("%d * %d = %d\n", registers[B], registers[A], registers[C]);
 		break;
