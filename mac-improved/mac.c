@@ -1,5 +1,5 @@
 /*
-MAC is a really simple virtual machine. It's written in C and is only one small C file.
+    A more advanced version of the VM
 */
 
 #include <stdio.h>
@@ -34,8 +34,8 @@ typedef enum {
     MOV, // 8  -- mov reg_a, reg_b :: movs the value in reg_a to reg_b
     SET, // 9  -- set reg, val     :: sets the reg to value
     LOG, // 10 -- log a            :: prints out a
-    IF,  // 11 -- if reg val IP    :: if the register == val branch to the IP
-    IFN, // 12 -- ifn reg val IP   :: if the register != val branch to the IP
+    IF,  // 11 -- if reg val ip    :: if the register == val branch to the ip
+    IFN, // 12 -- ifn reg val ip   :: if the register != val branch to the ip
     GLD, // 13 -- gld reg          :: loads a register to the stack
     GPT, // 14 -- gpt reg          :: pushes top of stack to the given register
     NOP  // 15 -- nop              :: nothing
@@ -91,7 +91,7 @@ int instructions[] = {
 // #define FETCH (test_b[IP])
 #define FETCH (instructions[IP])
 
-/* prints the stack from A to B */
+/** prints the stack from A to B */
 void print_stack() {
     for (int i = 0; i < SP; i++) {
         printf("0x%04d ", stack[i]);
