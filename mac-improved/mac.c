@@ -11,16 +11,11 @@ static int stack[STACK_SIZE];
 
 /** Registers */
 typedef enum {
-    A,              // GENERAL PURPOSE
-    B,
-    C,
-    D,
-    E,
-    F,
-    EX,             // EXCESS
-    EXA,            // MORE EXCESS
-    IP,             // INSTRUCTION POINTER
-    SP,             // STACK POINTER
+    A, B, C, D, E, F, I, J, // GENERAL PURPOSE
+    EX,                     // EXCESS
+    EXA,                    // MORE EXCESS
+    IP,                     // INSTRUCTION POINTER
+    SP,                     // STACK POINTER
     REGISTER_SIZE
 } Registers;
 
@@ -69,7 +64,7 @@ int test_b[] = {
     MUL,
     PSH, 10,
     PSH, 20,
-    ADD,
+    MUL,
     ADD,
     HLT
 };
@@ -197,7 +192,6 @@ void eval(int instr) {
         }
         case SLT: {
             SP = SP - 1;
-
             stack[SP] = stack[SP+1] < stack[SP];
             break;
         }
