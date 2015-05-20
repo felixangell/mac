@@ -213,7 +213,7 @@ int main(int argc, char** argv) {
 
     FILE *file = fopen(filename, "r");
     if (!file) {
-        printf("could not read file `%s`\n", filename);
+        printf("error: could not read file `%s`\n", filename);
         return -1;
     }
 

@@ -26,4 +26,4 @@ typedef enum {
     NOP  // 15 -- nop              :: nothing
 } Instructions;
 
-#endif __INSTRUCTIONS_H
+#endif // __INSTRUCTIONS_H
