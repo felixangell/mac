@@ -2,8 +2,8 @@
 MAC is a really simple virtual machine. It's written in C and is [as of writing this]
 only one small C file.
 
-This is the more advanced version, you can pass it files, for instance
-this file is `test.mac`:
+This is the more advanced version, it has more instructions and 
+you can pass it files, for instance this file is `test.mac`:
 
 	1 5 2 1
 	5 2 1 5
