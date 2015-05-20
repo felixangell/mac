@@ -249,12 +249,21 @@ int main(int argc, char** argv) {
         i++;
     }
 
+    // close the file
+    fclose(file);
+
+    // initialize stack pointer
     SP = -1;
 
+    // loop through program, but don't
+    // go out of the programs bounds
     while (running && IP < instruction_count) {
         eval(FETCH);
         IP = IP + 1;
     }
+
+    // clean up instructions
+    free(instructions);
 
     return 0;
 }
