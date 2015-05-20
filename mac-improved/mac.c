@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define STACK_SIZE 256
 static int stack[STACK_SIZE];
@@ -41,46 +42,18 @@ typedef enum {
     NOP  // 15 -- nop              :: nothing
 } Instructions;
 
+// instructions array
+int *instructions;
+
+// how many instructions to do
+int instruction_count = 0;
+
+// how much space is allocated for the instructions
+// 4 instructions by default
+int instruction_space = 4;
+
 /** if the program is running */
 static bool running = true;
-
-/** testing addition */
-int test_a[] = {
-    PSH, 5,
-    PSH, 2,
-    ADD,
-    PSH, 10,
-    PSH, 12,
-    ADD,
-    ADD,
-    POP,
-    HLT
-};
-
-/** testing multiplication */
-int test_b[] = {
-    PSH, 5,
-    PSH, 2,
-    MUL,
-    PSH, 10,
-    PSH, 20,
-    MUL,
-    ADD,
-    HLT
-};
-
-/** testing set and move */
-int instructions[] = {
-    SET, A, 21,     // 3
-    GLD, A,         // 5
-    PSH, 1,         // 7
-    SUB,            // 8
-    GPT, A,         // 10
-    IFN, A, 0, 2,   // 14
-    LOG, A,         // 16
-    LOG, B,
-    HLT             // 17
-};
 
 /** quick ways to get SP and IP */
 #define SP (registers[SP])
@@ -247,10 +220,39 @@ void eval(int instr) {
     }
 }
 
-int main() {
+int main(int argc, char** argv) {
+    if (argc <= 1) {
+        printf("error: no input files\n");
+        return -1;
+    }
+
+    // filename
+    char *filename = argv[1];
+
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printf("could not read file `%s`\n", filename);
+        return -1;
+    }
+
+    // allocate space for instructions
+    instructions = malloc(sizeof(*instructions) * instruction_space); // 4 instructions
+
+    // read the "binary" file
+    int num;
+    int i = 0;
+    while (fscanf(file, "%d", &num) > 0) {
+        instructions[i] = num;
+        printf("%d\n", instructions[i]);
+        if (i >= instruction_space) {
+            instructions = realloc(instructions, sizeof(*instructions) * (instruction_space * 2)); // double size
+        }
+        i++;
+    }
+
     SP = -1;
 
-    while (running) {
+    while (running && IP < instruction_count) {
         eval(FETCH);
         IP = IP + 1;
     }
