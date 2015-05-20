@@ -244,7 +244,8 @@ int main(int argc, char** argv) {
         instructions[i] = num;
         printf("%d\n", instructions[i]);
         if (i >= instruction_space) {
-            instructions = realloc(instructions, sizeof(*instructions) * (instruction_space * 2)); // double size
+            instruction_space *= 2;
+            instructions = realloc(instructions, sizeof(*instructions) * instruction_space); // double size
         }
         i++;
     }
