@@ -2,6 +2,17 @@
 MAC is a really simple virtual machine. It's written in C and is [as of writing this]
 only one small C file.
 
+This is the more advanced version, you can pass it files, for instance
+this file is `test.mac`:
+
+	1 5 2 1
+	5 2 1 5
+	2 0
+
+Which is passed as an argument to the program `./mac test.mac` and it will
+execute the program. Note that there could be more error checks on memory,
+etc. But these are not accounted for for simplicity and brevity.
+
 ## Registers
 
 	register	purpose
