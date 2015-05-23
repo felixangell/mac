@@ -184,7 +184,7 @@ void eval(int instr) {
         }
         case IF: {
             if (registers[instructions[IP + 1]] == instructions[IP + 2]) {
-                registers[IP + 1] = instructions[IP + 3];
+                registers[IP] = instructions[IP + 3];
             }
             IP = IP + 3;
             break;
