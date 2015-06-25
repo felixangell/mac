@@ -249,6 +249,9 @@ int main(int argc, char** argv) {
         }
         i++;
     }
+    
+    // set 'instruction_count' to number of instructions read
+    instruction_count = i;
 
     // close the file
     fclose(file);
