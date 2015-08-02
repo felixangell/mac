@@ -243,11 +243,11 @@ int main(int argc, char** argv) {
     while (fscanf(file, "%d", &num) > 0) {
         instructions[i] = num;
         printf("%d\n", instructions[i]);
+        i++;
         if (i >= instruction_space) {
             instruction_space *= 2;
             instructions = realloc(instructions, sizeof(*instructions) * instruction_space); // double size
         }
-        i++;
     }
     
     // set 'instruction_count' to number of instructions read
