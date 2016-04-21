@@ -54,6 +54,9 @@ int instruction_space = 4;
 /** if the program is running */
 static bool running = true;
 
+/** if the IP is assigned by jmp instructions(such as IF,IFN),it should not increase 1 any more **/
+bool is_jmp = false;
+
 /** quick ways to get SP and IP */
 #define SP (registers[SP])
 #define IP (registers[IP])
@@ -88,6 +91,7 @@ int find_empty_register() {
 }
 
 void eval(int instr) {
+    is_jmp = false;
     switch (instr) {
         case HLT: {
             running = false;
@@ -184,17 +188,22 @@ void eval(int instr) {
         }
         case IF: {
             if (registers[instructions[IP + 1]] == instructions[IP + 2]) {
-                registers[IP] = instructions[IP + 3];
+                IP = instructions[IP + 3];
+                is_jmp = true;
             }
-            IP = IP + 3;
+            else{
+                IP = IP + 3;
+            }
             break;
         }
         case IFN: {
             if (registers[instructions[IP + 1]] != instructions[IP + 2]) {
-                registers[EX] = instructions[IP + 3];
-                registers[IP] = registers[EX];
+                IP = instructions[IP + 3];
+                is_jmp = true;
             }
-            else { IP = IP + 3; }
+            else {
+                IP = IP + 3;
+            }
             break;
         }
         case GLD: {
@@ -263,7 +272,9 @@ int main(int argc, char** argv) {
     // go out of the programs bounds
     while (running && IP < instruction_count) {
         eval(FETCH);
-        IP = IP + 1;
+        if(!is_jmp){
+            IP = IP + 1;
+        }
     }
 
     // clean up instructions
