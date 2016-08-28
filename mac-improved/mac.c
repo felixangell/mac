@@ -11,7 +11,7 @@ static int stack[STACK_SIZE];
 
 /** Instructions */
 typedef enum {
-    HLT, // 0  -- hlt              :: halts program
+    HCF, // 0  -- hcf              :: halts program
     PSH, // 1  -- psh val          :: pushes <val> to stack
     POP, // 2  -- pop              :: pops value from stack
     ADD, // 3  -- add              :: adds top two vals on stack
@@ -93,7 +93,7 @@ int find_empty_register() {
 void eval(int instr) {
     is_jmp = false;
     switch (instr) {
-        case HLT: {
+        case HCF: {
             running = false;
             printf("Finished Execution\n");
             // print_stack(0, 16);
