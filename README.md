@@ -13,7 +13,7 @@ I've also ported this to my own programming language, Ark. [Check it out!](https
 
 	op   val    usage    			function
 	---------------------------------------------------------------------
-	HLT  0      hlt 	 			halts program
+	HCF  0      hcf 	 			halt and catch fire
 	PSH  1      psh val  			pushes <val> to stack
 	POP  2      pop 	 			pops value from stack
 	ADD  3      add 	 			adds top two vals on stack

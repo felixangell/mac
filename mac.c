@@ -18,7 +18,7 @@ typedef enum {
    PSH,
    ADD,
    POP,
-   HLT
+   HCF
 } InstructionSet;
 
 const int program[] = {
@@ -26,7 +26,7 @@ const int program[] = {
     PSH, 6,
     ADD,
     POP,
-    HLT
+    HCF
 };
 
 int fetch() {
@@ -35,7 +35,7 @@ int fetch() {
 
 void eval(int instr) {
     switch (instr) {
-        case HLT: {
+        case HCF: {
             running = false;
             printf("done\n");
             break;
