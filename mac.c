@@ -8,11 +8,11 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool running = true;
-int ip = 0;
-int sp = -1;
+bool _running = true;
+int ip = 0; // counter for "source code"
+int sp = -1; // counter for data stack
 
-int stack[256];
+int stack[256]; // equivalent to a data stack; not to be confused with call stack
 
 typedef enum {
    PSH,
@@ -21,6 +21,7 @@ typedef enum {
    HLT
 } InstructionSet;
 
+// simple "source code" to be executed
 const int program[] = {
     PSH, 5,
     PSH, 6,
@@ -29,27 +30,36 @@ const int program[] = {
     HLT
 };
 
+
 int fetch() {
+    // iterates through source code
     return program[ip];
 }
 
 void eval(int instr) {
     switch (instr) {
+
         case HLT: {
-            running = false;
+            // halt case - program is terminated by setting _running to false
+            _running = false;
             printf("done\n");
             break;
         }
+
         case PSH: {
+            // add whatever follows PSH in the source code to data stack
     	    sp++;
 	        stack[sp] = program[++ip];
 	        break;
         }
+
         case POP: {
+            // print TOC - top of stack
 	        int val_popped = stack[sp--];
 	        printf("popped %d\n", val_popped);
 	        break;
 	    }
+        
 	    case ADD: {
 	        // first we pop the stack and store it as a
 	        int a = stack[sp--];
