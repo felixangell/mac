@@ -5,9 +5,9 @@ only one small C file.
 This is the more advanced version, it has more instructions and 
 you can pass it files, for instance this file is `test.mac`:
 
-	1 5 2 1
-	5 2 1 5
-	2 0
+	1 5 1 1
+	3 11 1 9
+	1 0
 
 Which is passed as an argument to the program `./mac test.mac` and it will
 execute the program. Note that there could be more error checks on memory,
