@@ -1,5 +1,5 @@
 # mac
-mac is a simple virtual machine created for educational purposes. Here is the accompanied [blog post](https://felixangell.com/blog/virtual-machine-in-c/).
+mac is a simple virtual machine created for educational purposes. Here is the accompanied [blog post](https://felixangell.com/blog/virtual-machine-in-c).
 
 There is a slightly more extended example in the [mac-improved](mac-improved/) folder.
 
