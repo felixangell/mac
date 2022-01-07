@@ -49,22 +49,22 @@ void eval(int instr) {
 	        int val_popped = stack[sp--];
 	        printf("popped %d\n", val_popped);
 	        break;
-	    }
-	    case ADD: {
-	        // first we pop the stack and store it as a
-	        int a = stack[sp--];
-	    
-	        // then we pop the top of the stack and store it as b
-	        int b = stack[sp--];
+	}
+    	case ADD: {
+		// first we pop the stack and store it as a
+		int a = stack[sp--];
 
-	        // we then add the result and push it to the stack
-	        int result = b + a;
-	        sp++; // increment stack pointer **before**
-	        stack[sp] = result; // set the value to the top of the stack
+		// then we pop the top of the stack and store it as b
+		int b = stack[sp--];
 
-	        // all done!
-	        break;
-	    }
+		// we then add the result and push it to the stack
+		int result = b + a;
+		sp++; // increment stack pointer **before**
+		stack[sp] = result; // set the value to the top of the stack
+
+		// all done!
+		break;
+    	}
     }
 }
 
